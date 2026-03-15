@@ -1,0 +1,1116 @@
+{
+  "skill": "devops",
+  "version": "1.0",
+  "questions": [
+    {
+      "id": "linux-001",
+      "category": "linux",
+      "question": "Что такое POSIX?",
+      "answer": "Стандарт интерфейса для Unix-подобных ОС. Определяет API для работы с процессами, файлами, сокетами. Облегчает переносимость программ между Linux, macOS, BSD."
+    },
+    {
+      "id": "linux-002",
+      "category": "linux",
+      "question": "Что такое уровни выполнения (runlevels)?",
+      "answer": "Уровень 0 — выключение; 1 — single-user; 2 — multi-user без NFS; 3 — multi-user с сетью; 5 — графический режим; 6 — перезагрузка. В systemd заменены на targets."
+    },
+    {
+      "id": "linux-003",
+      "category": "linux",
+      "question": "Какие основные части включает система на базе дистрибутива Linux?",
+      "answer": "GRUB (загрузчик), ядро, init/systemd, демоны, shell, утилиты, при необходимости X/DE. Ядро управляет железом, init — сервисами."
+    },
+    {
+      "id": "linux-004",
+      "category": "linux",
+      "question": "Что такое BIOS, UEFI? Основы и различия",
+      "answer": "BIOS — устаревшая прошивка, MBR, диск до 2.1 ТБ, 16-бит. UEFI — современный стандарт, GPT, Secure Boot, 64-bit, быстрее, поддержка сети."
+    },
+    {
+      "id": "linux-005",
+      "category": "linux",
+      "question": "Что такое PXE? Как загрузиться по сети?",
+      "answer": "PXE — загрузка по сети. Сетевая карта запрашивает образ с TFTP-сервера. В BIOS включить LAN Boot. Полезно для массовой установки ОС."
+    },
+    {
+      "id": "linux-006",
+      "category": "linux",
+      "question": "Что такое ядро, initramfs, загрузчик?",
+      "answer": "Ядро — низкоуровневый код, работа с железом. initramfs — временная ФС в RAM до монтирования root. Загрузчик (GRUB) — выбор и загрузка ядра."
+    },
+    {
+      "id": "linux-007",
+      "category": "linux",
+      "question": "Зачем нужна система инициализации? Какие системы используются? (systemd, init…)",
+      "answer": "Нужна для монтирования ФС, запуска сервисов, перехода в нужный режим. Варианты: SysV init, systemd, Upstart, OpenRC."
+    },
+    {
+      "id": "linux-008",
+      "category": "linux",
+      "question": "Что такое systemd и init? В чём преимущество systemd?",
+      "answer": "Оба — системы инициализации. systemd даёт: параллельный запуск, unit-файлы вместо длинных bash-скриптов, автоперезапуск, journald, меньше разбросанных конфигов."
+    },
+    {
+      "id": "linux-009",
+      "category": "linux",
+      "question": "Как понять, используется ли в системе systemd?",
+      "answer": "stat /sbin/init — должен быть симлинк на systemd. Или ls /run/systemd/, readlink /proc/1/exe."
+    },
+    {
+      "id": "linux-010",
+      "category": "linux",
+      "question": "Что такое процесс? Что такое тред? В чём главные отличия?",
+      "answer": "Процесс — экземпляр программы, своё адресное пространство. Тред — поток внутри процесса, общая память. Процессы изолированы, треды делят память."
+    },
+    {
+      "id": "linux-011",
+      "category": "linux",
+      "question": "Где в Linux хранится информация о процессах?",
+      "answer": "В виртуальной ФС /proc — подкаталоги по PID, файлы /proc/self, /proc/1/exe, и т.д."
+    },
+    {
+      "id": "linux-012",
+      "category": "linux",
+      "question": "Что показывает статус процессов? Какие статусы есть в Linux?",
+      "answer": "R — running, S — sleeping, D — uninterruptible sleep, Z — zombie, T — stopped. См. ps или top."
+    },
+    {
+      "id": "linux-013",
+      "category": "linux",
+      "question": "Что такое зомби-процесс? Как его создать?",
+      "answer": "Процесс завершён, но родитель не сделал wait(). Родитель создаёт дочерний, тот exit(), родитель не вызывает wait() — дочерний становится зомби."
+    },
+    {
+      "id": "linux-014",
+      "category": "linux",
+      "question": "Чем опасны зомби-процессы?",
+      "answer": "Занимают slot в таблице процессов (ограниченный ресурс). Много зомби = «out of processes», нельзя создать новые."
+    },
+    {
+      "id": "linux-015",
+      "category": "linux",
+      "question": "Для чего нужны сигналы? Какие чаще всего? (5–10)",
+      "answer": "Управление процессами: завершение, пауза, возобновление. SIGTERM(15), SIGKILL(9), SIGINT(2/Ctrl+C), SIGSTOP, SIGCHLD, SIGHUP…"
+    },
+    {
+      "id": "linux-016",
+      "category": "linux",
+      "question": "Чем отличается SIGTERM от SIGKILL?",
+      "answer": "SIGTERM можно перехватить и корректно завершить. SIGKILL нельзя перехватить — ядро убивает процесс принудительно."
+    },
+    {
+      "id": "linux-017",
+      "category": "linux",
+      "question": "Какой сигнал при Ctrl+C?",
+      "answer": "SIGINT (2). Отправляется foreground-процессу терминалом."
+    },
+    {
+      "id": "linux-018",
+      "category": "linux",
+      "question": "Что такое Load Average? В каких единицах?",
+      "answer": "Средняя загрузка (процессы в R+D) за 1, 5 и 15 минут. «Единицей» считается одно ядро CPU."
+    },
+    {
+      "id": "linux-019",
+      "category": "linux",
+      "question": "LA = 900, 900, 900, сервер почти нормально работает. Нормально ли это?",
+      "answer": "ДА. На многоядерных машинах LA может быть > 1 на ядро. 900 при сотнях ядер — нормально. Смотреть на утилизацию CPU и наличие проблем."
+    },
+    {
+      "id": "linux-020",
+      "category": "linux",
+      "question": "Почему load average состоит из трёх значений?",
+      "answer": "Средние за 1, 5 и 15 минут. Показывают краткосрочную и долгосрочную нагрузку."
+    },
+    {
+      "id": "linux-021",
+      "category": "linux",
+      "question": "Что такое физическая память?",
+      "answer": "Оперативная память (RAM). Адресуется напрямую процессором."
+    },
+    {
+      "id": "linux-022",
+      "category": "linux",
+      "question": "Что такое виртуальная память?",
+      "answer": "Абстракция: каждый процесс видит своё адресное пространство. Ядро мапит виртуальные адреса на физическую RAM/swap."
+    },
+    {
+      "id": "linux-023",
+      "category": "linux",
+      "question": "Где посмотреть потребление памяти?",
+      "answer": "free -h, cat /proc/meminfo, htop."
+    },
+    {
+      "id": "linux-024",
+      "category": "linux",
+      "question": "Как работает OOM Killer?",
+      "answer": "При нехватке памяти ядро выбирает процесс (по oom_score) и убивает его, чтобы освободить RAM."
+    },
+    {
+      "id": "linux-025",
+      "category": "linux",
+      "question": "Что такое buffer/cache память?",
+      "answer": "Буферы — метаданные, кэш — данные с диска. Могут быть освобождены при необходимости (reclaimable)."
+    },
+    {
+      "id": "linux-026",
+      "category": "linux",
+      "question": "Что такое userspace и kernelspace? Чем отличаются?",
+      "answer": "Userspace — код приложений, ограниченный доступ. Kernelspace — код ядра, полный доступ к железу. Обмен через системные вызовы."
+    },
+    {
+      "id": "linux-027",
+      "category": "linux",
+      "question": "Что такое системные вызовы? Зачем нужны? Какие знаешь? (5–10)",
+      "answer": "Интерфейс userspace → kernel. read, write, open, close, fork, exec, mmap, brk… Документация: man 2 syscalls, strace."
+    },
+    {
+      "id": "linux-028",
+      "category": "linux",
+      "question": "Что такое файловый дескриптор?",
+      "answer": "Целое число — handle на открытый файл, сокет, pipe. 0=stdin, 1=stdout, 2=stderr."
+    },
+    {
+      "id": "linux-029",
+      "category": "linux",
+      "question": "Как посмотреть время последней модификации файла?",
+      "answer": "stat файл или stat --format=%y файл"
+    },
+    {
+      "id": "linux-030",
+      "category": "linux",
+      "question": "Что такое inode?",
+      "answer": "Структура на диске: метаданные файла (права, размер, указатели на блоки). Имена хранятся в каталогах, ссылаются на inode."
+    },
+    {
+      "id": "linux-031",
+      "category": "linux",
+      "question": "Hard link vs soft link (symlink)",
+      "answer": "Hard link — ещё одно имя того же inode, нельзя на каталоги/другой раздел. Symlink — отдельный файл с путём к цели."
+    },
+    {
+      "id": "linux-032",
+      "category": "linux",
+      "question": "Как посмотреть нагрузку на диски?",
+      "answer": "iostat -x, iotop, dstat, vmstat"
+    },
+    {
+      "id": "linux-033",
+      "category": "linux",
+      "question": "Что такое RAID? Какие массивы бывают?",
+      "answer": "RAID 0 — striping, RAID 1 — mirror, RAID 5 — parity, RAID 6 — два parity. RAID 6 выдерживает отказ 2 дисков."
+    },
+    {
+      "id": "linux-034",
+      "category": "linux",
+      "question": "Как вывести только STDERR, игнорируя STDOUT?",
+      "answer": "cmd 2>&1 >/dev/null | grep pattern или cmd 2>/dev/stderr в зависимости от задачи."
+    },
+    {
+      "id": "linux-035",
+      "category": "linux",
+      "question": "Как работает sudo? Для чего используется?",
+      "answer": "Запуск команды от другого пользователя (по умолчанию root). Читает /etc/sudoers. sudo -u user cmd."
+    },
+    {
+      "id": "linux-036",
+      "category": "linux",
+      "question": "Где информация о смонтированных ФС?",
+      "answer": "/proc/mounts, mount, findmnt, /etc/mtab"
+    },
+    {
+      "id": "linux-037",
+      "category": "linux",
+      "question": "Как процессы взаимодействуют?",
+      "answer": "Сокеты, pipes, FIFO, shared memory, сигналы, файлы."
+    },
+    {
+      "id": "linux-038",
+      "category": "linux",
+      "question": "Что такое QEMU? KVM? qemu-kvm?",
+      "answer": "QEMU — эмулятор/виртуализатор. KVM — модуль ядра для аппаратной виртуализации. qemu-kvm — QEMU с акселерацией через KVM."
+    },
+    {
+      "id": "linux-039",
+      "category": "linux",
+      "question": "Что такое iowait и почему он появляется?",
+      "answer": "Процент времени CPU в ожидании завершения I/O (диск, сеть). Высокий iowait — CPU простаивает, пока ждёт диск."
+    },
+    {
+      "id": "docker-001",
+      "category": "docker",
+      "question": "Что такое Docker и какие инструменты Linux в основе? Для чего используется?",
+      "answer": "Docker базируется на namespaces, cgroups, capabilities, overlayFS. Используется для упаковки приложений в изолированные контейнеры. Компоненты: daemon, CLI, Dockerfile, Image, Container, registry."
+    },
+    {
+      "id": "docker-002",
+      "category": "docker",
+      "question": "Что такое контейнеры и образы?",
+      "answer": "Образ — read-only шаблон (слои). Контейнер — запущенный образ с верхним read-write слоем. Образ = «установочный диск», контейнер = «установленная и работающая программа»."
+    },
+    {
+      "id": "docker-003",
+      "category": "docker",
+      "question": "Виртуализация vs эмуляция vs контейнеризация",
+      "answer": "Виртуализация — гипервизор, отдельные гостевые ОС. Эмуляция — программная эмуляция железа. Контейнеры — общее ядро хоста, изоляция через namespaces и cgroups."
+    },
+    {
+      "id": "docker-004",
+      "category": "docker",
+      "question": "В каком виде хранятся образы? Что такое overlayfs?",
+      "answer": "Слои (layers) — каждая инструкция Dockerfile создаёт слой. OverlayFS накладывает слои в единую ФС. Образ — логическая группировка слоёв + метаданные."
+    },
+    {
+      "id": "docker-005",
+      "category": "docker",
+      "question": "Какие команды порождают слои?",
+      "answer": "ADD, COPY, RUN. ENV, WORKDIR и др. меняют метаданные, но могут влиять на кэш."
+    },
+    {
+      "id": "docker-006",
+      "category": "docker",
+      "question": "Что такое Docker squash?",
+      "answer": "Объединение всех слоёв в один. Уменьшает число слоёв и размер образа. docker build --squash."
+    },
+    {
+      "id": "docker-007",
+      "category": "docker",
+      "question": "Как уменьшить размер образа? Много COPY, RUN",
+      "answer": "Alpine/minimal base; объединять RUN; multi-stage build; не ставить лишние пакеты; чистить кэш (rm -rf /var/cache/apt); копировать только нужное."
+    },
+    {
+      "id": "docker-008",
+      "category": "docker",
+      "question": "Разница между ADD и COPY?",
+      "answer": "COPY — простое копирование. ADD — может распаковывать архивы, скачивать по URL. Для файлов предпочтительнее COPY."
+    },
+    {
+      "id": "docker-009",
+      "category": "docker",
+      "question": "Как в Docker реализована изоляция? Какие средства Linux?",
+      "answer": "Namespaces: pid, net, ipc, mnt, uts — изоляция процессов, сети, ФС и т.д. cgroups — ограничение ресурсов (CPU, память, I/O)."
+    },
+    {
+      "id": "docker-010",
+      "category": "docker",
+      "question": "Почему в контейнере видны только свои процессы?",
+      "answer": "PID namespace — контейнер имеет своё дерево процессов. PID 1 в контейнере — его init, а не хост-systemd."
+    },
+    {
+      "id": "docker-011",
+      "category": "docker",
+      "question": "Можно ли ограничить ресурсы (CPU, RAM, I/O) контейнера? Как?",
+      "answer": "Да. --cpus, --memory, --memory-swap, --blkio-weight и т.д. Реализовано через cgroups."
+    },
+    {
+      "id": "docker-012",
+      "category": "docker",
+      "question": "Что происходит при ENTRYPOINT?",
+      "answer": "Команда, которая всегда выполняется при запуске контейнера. Аргументы CMD или docker run передаются в неё как параметры."
+    },
+    {
+      "id": "docker-013",
+      "category": "docker",
+      "question": "Отличие CMD от ENTRYPOINT",
+      "answer": "CMD — команда по умолчанию, переопределяется аргументами docker run. ENTRYPOINT — «точка входа», аргументы run дополняют, а не заменяют. CMD подставляется после ENTRYPOINT."
+    },
+    {
+      "id": "docker-014",
+      "category": "docker",
+      "question": "В /var/lib/docker/ — как понять, какая папка к какому контейнеру?",
+      "answer": "docker inspect + GraphDriver.Data.MergedDir или docker inspect $(docker ps -qa) | jq -r '...'"
+    },
+    {
+      "id": "docker-015",
+      "category": "docker",
+      "question": "Сетевое взаимодействие между контейнерами — как настроить?",
+      "answer": "Создать сеть docker network create, подключить контейнеры к ней. Они могут обращаться друг к другу по имени (внутренний DNS Docker)."
+    },
+    {
+      "id": "docker-016",
+      "category": "docker",
+      "question": "Для чего применяется docker-compose?",
+      "answer": "Оркестрация нескольких контейнеров: единый конфиг, общие сети, volumes, переменные окружения. Удобно для dev/stage."
+    },
+    {
+      "id": "networks-001",
+      "category": "networks",
+      "question": "Что такое IP и маска подсети?",
+      "answer": "IP — числовой идентификатор узла в сети TCP/IP. Маска определяет, какая часть — сеть, какая — хост. Нужна для маршрутизации."
+    },
+    {
+      "id": "networks-002",
+      "category": "networks",
+      "question": "Что такое 127.0.0.1? Зачем нужен?",
+      "answer": "Loopback-адрес. Пакеты на 127.0.0.0/8 не покидают хост — возвращаются обратно. Используется для локальных сервисов."
+    },
+    {
+      "id": "networks-003",
+      "category": "networks",
+      "question": "Что такое 10.0.0.0/8, 192.168.0.0/16, 172.16.0.0/12?",
+      "answer": "Приватные подсети (RFC 1918). Не маршрутизируются в интернете. Используются в локальных сетях."
+    },
+    {
+      "id": "networks-004",
+      "category": "networks",
+      "question": "Чем отличается TCP от UDP?",
+      "answer": "TCP — с установкой соединения, гарантия доставки, порядок, retransmit. UDP — без соединения, без гарантий. Лучше зависит от задачи: TCP — надёжность, UDP — скорость/стриминг."
+    },
+    {
+      "id": "networks-005",
+      "category": "networks",
+      "question": "Как TCP устанавливает соединение? (three-way handshake)",
+      "answer": "1. Клиент → SYN. 2. Сервер → SYN+ACK. 3. Клиент → ACK. После этого ESTABLISHED."
+    },
+    {
+      "id": "networks-006",
+      "category": "networks",
+      "question": "На каком уровне OSI работает TCP?",
+      "answer": "Транспортный (L4)."
+    },
+    {
+      "id": "networks-007",
+      "category": "networks",
+      "question": "Почему DNS использует UDP?",
+      "answer": "Маленькие запросы/ответы. UDP быстрее — нет handshake. Если ответ не влезает в UDP — TC-флаг, повтор по TCP."
+    },
+    {
+      "id": "networks-008",
+      "category": "networks",
+      "question": "Что происходит при вводе yandex.ru в браузере?",
+      "answer": "1. Протокол (HSTS → HTTPS). 2. DNS: кэш браузера → hosts → ОС → роутер → провайдер → корневые NS → TLD → авторитативный NS. 3. TCP + TLS handshake. 4. HTTP-запрос (GET, Host, …). 5. Ответ, рендер."
+    },
+    {
+      "id": "networks-009",
+      "category": "networks",
+      "question": "Какие стандартные коды ответов веб-серверов?",
+      "answer": "2xx — успех; 3xx — редирект; 4xx — клиентская ошибка (404, 403); 5xx — серверная ошибка (502, 503)."
+    },
+    {
+      "id": "networks-010",
+      "category": "networks",
+      "question": "Основные типы HTTP-запросов",
+      "answer": "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS."
+    },
+    {
+      "id": "networks-011",
+      "category": "networks",
+      "question": "Что такое TLS и SSL?",
+      "answer": "Протоколы шифрования трафика. TLS — преемник SSL. Используются для HTTPS."
+    },
+    {
+      "id": "networks-012",
+      "category": "networks",
+      "question": "Симметричное vs асимметричное шифрование",
+      "answer": "Симметричное — один ключ для шифрования и расшифровки. Асимметричное — пара ключей: публичный шифрует, приватный расшифровывает."
+    },
+    {
+      "id": "networks-013",
+      "category": "networks",
+      "question": "Как работают сертификаты? Подтверждение HTTPS",
+      "answer": "Сервер отдаёт сертификат (подписан CA). Клиент проверяет подпись по списку доверенных CA. Далее — обмен ключами, симметричное шифрование сессии."
+    },
+    {
+      "id": "networks-014",
+      "category": "networks",
+      "question": "Что такое SNI?",
+      "answer": "Server Name Indification — расширение TLS. Позволяет на одном IP держать несколько HTTPS-сайтов (разные сертификаты)."
+    },
+    {
+      "id": "networks-015",
+      "category": "networks",
+      "question": "Как работает DNS? Зачем нужен?",
+      "answer": "Сопоставляет домены и IP. Иерархия: корневые → TLD → авторитативные NS. Нужен, чтобы не запоминать IP."
+    },
+    {
+      "id": "networks-016",
+      "category": "networks",
+      "question": "Какие DNS-записи бывают?",
+      "answer": "A, AAAA, CNAME, NS, MX, TXT, PTR, SOA, TTL. DKIM/DMARC — для почты."
+    },
+    {
+      "id": "networks-017",
+      "category": "networks",
+      "question": "Что такое authority в DNS?",
+      "answer": "Авторитативный сервер — хранит «источник правды» для зоны домена."
+    },
+    {
+      "id": "networks-018",
+      "category": "networks",
+      "question": "Рекурсивный vs нерекурсивный запрос",
+      "answer": "Рекурсивный — сервер сам ходит по цепочке до ответа. Нерекурсивный — возвращает ссылку на следующий сервер."
+    },
+    {
+      "id": "networks-019",
+      "category": "networks",
+      "question": "Что такое и зачем нужен ARP?",
+      "answer": "Address Resolution Protocol — сопоставление IP и MAC в L2. Широковещательный запрос «у кого IP X?», ответ «у меня, MAC Y»."
+    },
+    {
+      "id": "networks-020",
+      "category": "networks",
+      "question": "Зачем нужен VLAN?",
+      "answer": "Логическое разделение L2-сети. Изоляция трафика, ограничение broadcast. Несколько сетей на одном физическом порту."
+    },
+    {
+      "id": "networks-021",
+      "category": "networks",
+      "question": "Как работает NAT? Зачем нужен?",
+      "answer": "Преобразование приватных IP в публичные. Несколько хостов за одним внешним IP. Сохранение пула публичных адресов."
+    },
+    {
+      "id": "networks-022",
+      "category": "networks",
+      "question": "На каком порту работает ping?",
+      "answer": "Ни на каком. Ping — ICMP (сетевой уровень), портов нет. Исключение — traceroute может использовать UDP."
+    },
+    {
+      "id": "networks-023",
+      "category": "networks",
+      "question": "Как устанавливается SSH и авторизация по паролю и ключам?",
+      "answer": "Пароль — шифрованный канал, пароль передаётся по нему. Ключи — клиент отправляет подпись, сервер проверяет по публичному ключу. Публичный ключ шифрует, приватный расшифровывает."
+    },
+    {
+      "id": "networks-024",
+      "category": "networks",
+      "question": "На каком уровне OSI работает SSH?",
+      "answer": "Прикладной (L7). Транспорт — TCP."
+    },
+    {
+      "id": "git-001",
+      "category": "git",
+      "question": "Когда использовать merge, когда rebase?",
+      "answer": "- Если сомневаетесь — используйте merge. - Merge — когда нужна ветвящаяся история, ветка общая (open source), важна отмена слияния."
+    },
+    {
+      "id": "git-002",
+      "category": "git",
+      "question": "Что такое cherry-pick?",
+      "answer": "Перенос отдельных коммитов из одной ветки в другую. В отличие от merge/rebase, переносятся не целые цепочки, а выбранные коммиты. Удобно для hotfix-ов в maintenance-ветках."
+    },
+    {
+      "id": "git-003",
+      "category": "git",
+      "question": "Какие практики работы с Git вы знаете? Форки",
+      "answer": "- Central workflow — все пушат в общий remote. - Trunk-based — короткие ветки, master почти всегда готов к деплою, feature flags, постоянный code review."
+    },
+    {
+      "id": "git-004",
+      "category": "git",
+      "question": "Что такое GitFlow?",
+      "answer": "- master — готовое к релизу состояние. - develop — ветка разработки. - feature — отдельные фичи, мерджатся в develop. - hotfix — срочные правки, базируются на master и мерджатся обратно."
+    },
+    {
+      "id": "git-005",
+      "category": "git",
+      "question": "В ветке develop есть коммит, который нужно перенести в master. Как сделать?",
+      "answer": "Сделать merge develop в master, или cherry-pick конкретного коммита."
+    },
+    {
+      "id": "git-006",
+      "category": "git",
+      "question": "Что такое Trunk-based development?",
+      "answer": "Все разработчики часто мержат в общую ветку (trunk). Ветки короткоживущие, изменения небольшие. Используются feature flags для включения ещё не готовых фич."
+    },
+    {
+      "id": "git-007",
+      "category": "git",
+      "question": "Как откатить весь репозиторий к определённому коммиту?",
+      "answer": "git reset --hard <commit> (локально, с потерей изменений) или git revert для создания отменяющих коммитов без перезаписи истории (безопаснее для shared-веток)."
+    },
+    {
+      "id": "git-008",
+      "category": "git",
+      "question": "В репозиторий запушен коммит с изменениями в двух файлах. Как откатить этот коммит?",
+      "answer": "git revert <commit> — создаёт новый коммит, отменяющий изменения. Не перезаписывает историю."
+    },
+    {
+      "id": "cicd-001",
+      "category": "cicd",
+      "question": "Чем CI отличается от CD (Delivery и Deployment)?",
+      "answer": "CI — автоматическая сборка и тесты при коммите. CD Delivery — артефакт готов к деплою, но деплой ручной. CD Deployment — деплой тоже автоматический."
+    },
+    {
+      "id": "cicd-002",
+      "category": "cicd",
+      "question": "Основные этапы CI/CD",
+      "answer": "Сборка → тесты (unit, integration) → линтеры/анализ → сбор артефакта → деплой (staging → prod). В CI: build, test, artifact."
+    },
+    {
+      "id": "cicd-003",
+      "category": "cicd",
+      "question": "Пример процесса CI/CD после пуша в Git",
+      "answer": "Webhook → pipeline: checkout → install deps → build → test → (опционально) push image → deploy на stage/prod."
+    },
+    {
+      "id": "cicd-004",
+      "category": "cicd",
+      "question": "Как сделать job только при ручном запуске?",
+      "answer": "when: manual — job появляется в pipeline, но не запускается автоматически."
+    },
+    {
+      "id": "cicd-005",
+      "category": "cicd",
+      "question": "5 проектов на одном языке. Как избежать дублирования конфига пайплайнов?",
+      "answer": "include из общего репозитория, extends от template- job, общие stages и variables."
+    },
+    {
+      "id": "cicd-006",
+      "category": "cicd",
+      "question": "before_script и after_script — в чём разница?",
+      "answer": "before_script — выполняется до script в той же сессии; переменные доступны в script. after_script — отдельная сессия, всегда выполняется (даже при fail); переменные из script недоступны."
+    },
+    {
+      "id": "cicd-007",
+      "category": "cicd",
+      "question": "Как запускать тесты только при MR?",
+      "answer": "rules: - if: '$CI_PIPELINE_SOURCE == \"merge_request_event\"'"
+    },
+    {
+      "id": "cicd-008",
+      "category": "cicd",
+      "question": "Что такое кэширование в GitLab CI?",
+      "answer": "Сохранение директорий (node_modules, vendor) между job/pipeline. cache: paths, key, policy (pull-push, pull). Ускоряет сборку."
+    },
+    {
+      "id": "monitoring-001",
+      "category": "monitoring",
+      "question": "Какие инструменты мониторинга бывают?",
+      "answer": "Метрики: Prometheus, Grafana, InfluxDB, Datadog. Логи: ELK, Loki, Splunk. Трейсы: Jaeger, Zipkin. APM: New Relic, Dynatrace."
+    },
+    {
+      "id": "monitoring-002",
+      "category": "monitoring",
+      "question": "Разница pull и push в мониторинге",
+      "answer": "Pull (Prometheus) — мониторинг сам забирает метрики по HTTP. Push (Graphite, StatsD) — агенты отправляют метрики на сервер."
+    },
+    {
+      "id": "monitoring-003",
+      "category": "monitoring",
+      "question": "Black box vs White box мониторинг",
+      "answer": "Black box — снаружи (доступность, latency). White box — метрики изнутри (CPU, память, логи приложения)."
+    },
+    {
+      "id": "monitoring-004",
+      "category": "monitoring",
+      "question": "Как устроен сбор логов? (Agent → collector → storage → UI)",
+      "answer": "Agent (Filebeat, Fluentd) собирает логи → Collector/Ingest (Logstash, Loki) обрабатывает → Storage (Elasticsearch, Loki) → UI (Kibana, Grafana)."
+    },
+    {
+      "id": "monitoring-005",
+      "category": "monitoring",
+      "question": "Что такое Fluentd, Filebeat, Logstash?",
+      "answer": "Filebeat — лёгкий шipper (отправка логов). Logstash — обработка, парсинг, фильтрация. Fluentd — альтернатива, сбор и роутинг логов."
+    },
+    {
+      "id": "monitoring-006",
+      "category": "monitoring",
+      "question": "Как работает Prometheus?",
+      "answer": "Периодически скрапит targets (HTTP endpoints с метриками). Хранит time-series. PromQL для запросов. Alertmanager для алертов."
+    },
+    {
+      "id": "monitoring-007",
+      "category": "monitoring",
+      "question": "Что такое node_exporter, cAdvisor?",
+      "answer": "node_exporter — метрики хоста (CPU, память, диск, сеть). cAdvisor — метрики контейнеров (CPU, память, сеть per container)."
+    },
+    {
+      "id": "monitoring-008",
+      "category": "monitoring",
+      "question": "Зачем нужен Alertmanager?",
+      "answer": "Обработка алертов от Prometheus: дедупликация, группировка, маршрутизация (email, Slack, PagerDuty)."
+    },
+    {
+      "id": "monitoring-009",
+      "category": "monitoring",
+      "question": "Что такое SLO, SLA, SLI?",
+      "answer": "- SLI (Service Level Indicator) — измеряемая метрика (uptime, latency, error rate) - SLO (Service Level Objective) — целевое значение SLI (99."
+    },
+    {
+      "id": "monitoring-010",
+      "category": "monitoring",
+      "question": "Привести примеры SLO и SLA",
+      "answer": "SLO: «Доступность API 99.9% в месяц», «Latency p99 &lt; 200 ms». SLA: «При простоях &gt; 0.1% — компенсация», «За нарушение бэкапов — возврат стоимости услуги»."
+    },
+    {
+      "id": "monitoring-011",
+      "category": "monitoring",
+      "question": "Какие метрики нужно собирать?",
+      "answer": "Golden signals: latency, traffic, errors, saturation. Плюс ресурсы (CPU, RAM, disk, network), специфичные метрики приложения."
+    },
+    {
+      "id": "monitoring-012",
+      "category": "monitoring",
+      "question": "Infrastructure vs application мониторинг",
+      "answer": "Infrastructure — хост, контейнеры, сеть. Application — RPS, latency, ошибки, бизнес-метрики."
+    },
+    {
+      "id": "iac-001",
+      "category": "iac",
+      "question": "Для чего нужен ad-hoc в Ansible?",
+      "answer": "Быстрое выполнение одной команды на группе хостов без создания playbook. ansible all -m ping -a \"cmd\""
+    },
+    {
+      "id": "iac-002",
+      "category": "iac",
+      "question": "Что такое роли в Ansible? Пример",
+      "answer": "Структурированный набор задач, handlers, vars, templates. Повторно используемые куски конфигурации. Директории: tasks, handlers, vars, defaults, files, templates."
+    },
+    {
+      "id": "iac-003",
+      "category": "iac",
+      "question": "Что такое идемпотентность? Примеры",
+      "answer": "Повторное выполнение даёт тот же результат. Пример: apt install — если уже установлено, ничего не делает. Неидемпотентно: echo >> file."
+    },
+    {
+      "id": "iac-004",
+      "category": "iac",
+      "question": "Для чего нужны handlers (хендлеры)?",
+      "answer": "Действия, которые выполняются по уведомлению (notify) и только при реальном изменении. Например, перезапуск сервиса после смены конфига."
+    },
+    {
+      "id": "iac-005",
+      "category": "iac",
+      "question": "Разница pull и push модели",
+      "answer": "Push (Ansible) — управляющий хост запускает задания, пушит на целевые. Pull (Puppet, часть Chef) — агенты на хостах сами подтягивают конфиг."
+    },
+    {
+      "id": "iac-006",
+      "category": "iac",
+      "question": "Плюсы Ansible",
+      "answer": "Агентов нет (SSH), YAML, идемпотентность, модули под облака и ОС, community роли."
+    },
+    {
+      "id": "iac-007",
+      "category": "iac",
+      "question": "Отличие модуля от плагина",
+      "answer": "Модуль — выполняемая задача (apt, copy, template). Плагин — расширение поведения (inventory, connection, callback)."
+    },
+    {
+      "id": "iac-008",
+      "category": "iac",
+      "question": "Чем Terraform отличается от Ansible?",
+      "answer": "Terraform — IaC, создание/управление инфраструктурой, state, инкрементальные изменения. Ansible — конфигурация уже существующих ресурсов, без state."
+    },
+    {
+      "id": "iac-009",
+      "category": "iac",
+      "question": "Что такое провайдер в Terraform?",
+      "answer": "Плагин для работы с API облака или сервиса (AWS, GCP, Kubernetes и т.д.)."
+    },
+    {
+      "id": "iac-010",
+      "category": "iac",
+      "question": "Что такое tfstate? Зачем нужен?",
+      "answer": "Хранит актуальное состояние инфраструктуры. Нужен для plan/apply — Terraform сравнивает желаемое и фактическое."
+    },
+    {
+      "id": "iac-011",
+      "category": "iac",
+      "question": "Как удалить один ресурс из 20 без правки кода?",
+      "answer": "terraform destroy -target=resource.type.name — удалить только указанный ресурс."
+    },
+    {
+      "id": "iac-012",
+      "category": "iac",
+      "question": "У вас dev, stage, prod. Как один код для всех сред?",
+      "answer": "Workspaces, отдельные state-файлы, переменные (tfvars), remote backend с разными key."
+    },
+    {
+      "id": "iac-013",
+      "category": "iac",
+      "question": "Что такое lifecycle в Terraform? create_before_destroy",
+      "answer": "Правила жизненного цикла ресурса. create_before_destroy — сначала создаёт новый, потом удаляет старый. Уменьшает даунтайм."
+    },
+    {
+      "id": "kubernetes-001",
+      "category": "kubernetes",
+      "question": "Что такое Kubernetes?",
+      "answer": "Система оркестрации контейнеров. Управляет запуском, масштабированием, балансировкой контейнеров на множестве узлов."
+    },
+    {
+      "id": "kubernetes-002",
+      "category": "kubernetes",
+      "question": "Какую проблему решает Kubernetes?",
+      "answer": "Масштабирование контейнеров на множество хостов, балансировка, самоизлечение, декларативное описание желаемого состояния. Service discovery, логирование, CI/CD."
+    },
+    {
+      "id": "kubernetes-003",
+      "category": "kubernetes",
+      "question": "Что такое minikube?",
+      "answer": "Локальный кластер Kubernetes для разработки и экспериментов."
+    },
+    {
+      "id": "kubernetes-004",
+      "category": "kubernetes",
+      "question": "Опиши архитектуру Kubernetes-кластера.",
+      "answer": "Control plane: API server, etcd, scheduler, controller-manager. Worker nodes: kubelet, kube-proxy, container runtime (CRI). Для отказоустойчивости — несколько master-нод, нечётное число для кворума."
+    },
+    {
+      "id": "kubernetes-005",
+      "category": "kubernetes",
+      "question": "Что такое Pod?",
+      "answer": "Минимальная единица деплоя. Один или несколько контейнеров, общий network namespace, volumes. Pod получает IP в кластере."
+    },
+    {
+      "id": "kubernetes-006",
+      "category": "kubernetes",
+      "question": "Разница между Pod и контейнером?",
+      "answer": "Pod — обёртка; внутри — один или несколько контейнеров. Pod — единица планирования и размещения."
+    },
+    {
+      "id": "kubernetes-007",
+      "category": "kubernetes",
+      "question": "Может ли Pod запуститься на двух разных нодах?",
+      "answer": "Нет. Pod всегда размещается на одной ноде."
+    },
+    {
+      "id": "kubernetes-008",
+      "category": "kubernetes",
+      "question": "Deployment vs ReplicaSet vs StatefulSet",
+      "answer": "- ReplicaSet — поддерживает заданное число подов - Deployment — управляет ReplicaSet, rolling update, rollback - StatefulSet — stateful-приложения, стабильные имена, отдельный PVC на под"
+    },
+    {
+      "id": "kubernetes-009",
+      "category": "kubernetes",
+      "question": "Что такое Service? Типы.",
+      "answer": "Абстракция доступа к подам. Типы: ClusterIP (внутри кластера), NodePort, LoadBalancer, ExternalName. Держит стабильный ClusterIP, маршрутизирует на эндпоинты (поды)."
+    },
+    {
+      "id": "kubernetes-010",
+      "category": "kubernetes",
+      "question": "Что такое Ingress?",
+      "answer": "Правила входящего HTTP/HTTPS-трафика. Маршрутизация по host/path на сервисы. Нужен Ingress Controller (nginx, traefik)."
+    },
+    {
+      "id": "kubernetes-011",
+      "category": "kubernetes",
+      "question": "Readiness, Liveness, Startup — в чём отличие?",
+      "answer": "- Liveness — жив ли контейнер; при fail — перезапуск - Readiness — готов ли принимать трафик; при fail — убирается из endpoints - Startup — первичная готовность; пока не пройдена — liveness/readiness."
+    },
+    {
+      "id": "kubernetes-012",
+      "category": "kubernetes",
+      "question": "Job vs CronJob",
+      "answer": "Job — одноразовая задача. CronJob — Job по расписанию (cron)."
+    },
+    {
+      "id": "kubernetes-013",
+      "category": "kubernetes",
+      "question": "ConfigMap и Secret — для чего?",
+      "answer": "ConfigMap — некритичные настройки (ключ-значение). Secret — пароли, токены. Могут монтироваться как env или volumes."
+    },
+    {
+      "id": "kubernetes-014",
+      "category": "kubernetes",
+      "question": "PersistentVolume и PersistentVolumeClaim",
+      "answer": "PV — кусок хранилища. PVC — запрос под него (размер, access mode). StorageClass — динамическое создание PV."
+    },
+    {
+      "id": "kubernetes-015",
+      "category": "kubernetes",
+      "question": "Requests и Limits. QoS-классы.",
+      "answer": "Requests — зарезервировано для пода. Limits — максимум. QoS: Guaranteed (limits=requests), Burstable (limits>requests), BestEffort (не заданы). При нехватке ресурсов BestEffort утилизируется первым."
+    },
+    {
+      "id": "kubernetes-016",
+      "category": "kubernetes",
+      "question": "Что будет при превышении лимита памяти/CPU?",
+      "answer": "Память — OOMKill. CPU — throttling (CFS), падение проб, возможные рестарты."
+    },
+    {
+      "id": "kubernetes-017",
+      "category": "kubernetes",
+      "question": "DaemonSet — зачем?",
+      "answer": "По одному поду на каждую ноду. Сбор логов, мониторинг, сетевые плагины (CNI)."
+    },
+    {
+      "id": "kubernetes-018",
+      "category": "kubernetes",
+      "question": "Taints и Tolerations",
+      "answer": "Taint — «запрет» размещения подов на ноде. Toleration — разрешение поду быть на этой ноде. NoSchedule, PreferNoSchedule, NoExecute."
+    },
+    {
+      "id": "kubernetes-019",
+      "category": "kubernetes",
+      "question": "Что такое оператор?",
+      "answer": "Расширение Kubernetes. Следит за кастомными ресурсами (CRD), управляет состоянием сложных приложений (БД, очереди)."
+    },
+    {
+      "id": "kubernetes-020",
+      "category": "kubernetes",
+      "question": "Через что реализованы сети в Kubernetes?",
+      "answer": "CNI-плагины: Calico, Flannel, Cilium. Выдают IP подам, маршрутизация между нодами (BGP или overlay). kube-proxy — iptables/IPVS для Service."
+    },
+    {
+      "id": "kubernetes-021",
+      "category": "kubernetes",
+      "question": "RBAC. Role vs ClusterRole?",
+      "answer": "RBAC — права доступа по ролям. Role — в рамках namespace. ClusterRole — кластер-широкий или доступ к кластерным ресурсам (nodes)."
+    },
+    {
+      "id": "kubernetes-022",
+      "category": "kubernetes",
+      "question": "CRI, CSI, CNI — что это?",
+      "answer": "- CRI — интерфейс контейнерной среды (containerd, CRI-O) - CSI — интерфейс хранилища - CNI — интерфейс сети"
+    },
+    {
+      "id": "kubernetes-023",
+      "category": "kubernetes",
+      "question": "Что такое Helm?",
+      "answer": "Пакетный менеджер для Kubernetes. Шаблоны (charts), переменные, зависимости, версионирование."
+    },
+    {
+      "id": "aws-001",
+      "category": "aws",
+      "question": "EC2 — что это?",
+      "answer": "Виртуальные сервера. Модели оплаты: On-Demand, Reserved (скидка), Spot (дешевле, могут забрать). Типы: General Purpose (T3, M5), Compute (C5), Memory (R5), Storage (I3), GPU (P4, G5)."
+    },
+    {
+      "id": "aws-002",
+      "category": "aws",
+      "question": "VPC — что это?",
+      "answer": "Виртуальная приватная сеть. Subnets (public/private), Internet Gateway, NAT Gateway, Route Tables. Изоляция сетей в облаке."
+    },
+    {
+      "id": "aws-003",
+      "category": "aws",
+      "question": "Security Group — что это?",
+      "answer": "Виртуальный файрвол на уровне инстанса. Только Allow-правила. По умолчанию блокируется весь входящий трафик. Один ресурс может быть в нескольких Security Groups."
+    },
+    {
+      "id": "aws-004",
+      "category": "aws",
+      "question": "S3 — что это?",
+      "answer": "Object storage. Высокая долговечность. Бакет — уникальное глобальное имя. Классы хранения: Standard, IA, Glacier."
+    },
+    {
+      "id": "aws-005",
+      "category": "aws",
+      "question": "Route 53 — что это?",
+      "answer": "Управляемый DNS-сервис. Регистрация доменов, DNS-записи, health checks, маршрутизация трафика."
+    },
+    {
+      "id": "aws-006",
+      "category": "aws",
+      "question": "EKS — что это?",
+      "answer": "Управляемый Kubernetes от AWS. Control plane управляется AWS. Worker nodes — EC2 или Fargate. Интеграция с IAM, CloudWatch, ELB, ECR."
+    },
+    {
+      "id": "aws-007",
+      "category": "aws",
+      "question": "Как устроен доступ из private subnet в интернет?",
+      "answer": "NAT Gateway в public subnet. В route table приватной подсети — 0.0.0.0/0 → NAT Gateway. NAT подменяет source IP на свой и шлёт через Internet Gateway."
+    },
+    {
+      "id": "aws-008",
+      "category": "aws",
+      "question": "EKS Anywhere vs EKS",
+      "answer": "EKS — в AWS. EKS Anywhere — тот же API/инструменты, но на bare-metal или on-prem, с интеграцией сервисов AWS."
+    },
+    {
+      "id": "databases-001",
+      "category": "databases",
+      "question": "Что такое индексы, зачем нужны?",
+      "answer": "Индекс — структура для быстрого поиска (B-tree, hash). Ускоряет SELECT, замедляет INSERT/UPDATE/DELETE. Аналогия: каталог в библиотеке вместо поиска по всем полкам."
+    },
+    {
+      "id": "databases-002",
+      "category": "databases",
+      "question": "Проблема большого числа индексов?",
+      "answer": "- Медленнее запись (обновление всех индексов) - Дороже хранение и обслуживание - Неактуальная статистика → плохие планы запросов Плохи не сами индексы, а неиспользуемые."
+    },
+    {
+      "id": "databases-003",
+      "category": "databases",
+      "question": "Как настроить master-slave репликацию в MySQL?",
+      "answer": "1. На master: server-id, log_bin, binlog_do_db 2. Пользователь для репликации: GRANT REPLICATION SLAVE ON . TO 'slave_user'@'%' 3. mysqldump --lock-all-tables на master, импорт на slave 4."
+    },
+    {
+      "id": "databases-004",
+      "category": "databases",
+      "question": "Разница между TRUNCATE, DELETE и DROP?",
+      "answer": "- DROP — удаляет таблицу целиком (структуру). DDL, необратимо. - DELETE — удаляет строки, можно с WHERE. DML, откатывается. Медленнее. - TRUNCATE — удаляет все строки, сбрасывает счётчики."
+    },
+    {
+      "id": "databases-005",
+      "category": "databases",
+      "question": "Почему не использовать mysqldump на большой активной базе? Альтернативы?",
+      "answer": "Блокирует таблицы, нагрузка на диск и сеть. Альтернативы: - mysqldump --single-transaction (InnoDB) - mysqldump --skip-lock-tables (есть риск несогласованности) - Percona XtraBackup, mariabackup —."
+    },
+    {
+      "id": "databases-006",
+      "category": "databases",
+      "question": "Что такое роли в PostgreSQL?",
+      "answer": "Роль — пользователь или группа. Управляет доступом к объектам БД, владением объектами. Роль может быть членом другой роли (наследование прав)."
+    },
+    {
+      "id": "databases-007",
+      "category": "databases",
+      "question": "Что такое WAL и зачем он нужен?",
+      "answer": "WAL (Write-Ahead Logging) — журнал, в который записываются изменения до записи в основные файлы данных. Нужен для: - восстановления при сбоях - репликации - point-in-time recovery"
+    },
+    {
+      "id": "databases-008",
+      "category": "databases",
+      "question": "ACID — расшифровка",
+      "answer": "- Atomicity — транзакция либо целиком, либо нет - Consistency — переход из одного согласованного состояния в другое - Isolation — транзакции изолированы друг от друга - Durability — зафиксированные."
+    },
+    {
+      "id": "databases-009",
+      "category": "databases",
+      "question": "Как безопасно удалить или изменить миллион строк?",
+      "answer": "1. Разбить на порции (например, по 1000) с паузой 2. Выполнять в транзакциях с лимитами 3. Делать в низкопиковое время 4. Предварительно делать бэкап"
+    },
+    {
+      "id": "python-001",
+      "category": "python",
+      "question": "Что такое хеш-таблица? Примеры использования.",
+      "answer": "Структура данных, где индекс/адрес элемента вычисляется хеш-функцией. Позволяет O(1) доступ по ключу. В Python — dict. Пример: маппинг чит-кодов в играх, кэши, счётчики."
+    },
+    {
+      "id": "python-002",
+      "category": "python",
+      "question": "Что такое итератор и генератор?",
+      "answer": "- Итератор — объект с __iter__ и __next__, перебирает элементы коллекции. - Генератор — итератор, создаётся функцией с yield. Значения создаются по мере запроса, не хранятся все сразу."
+    },
+    {
+      "id": "python-003",
+      "category": "python",
+      "question": "Разница между кортежем и списком?",
+      "answer": "- Список — изменяемый (append, remove), кортеж — неизменяемый. - Кортеж быстрее, меньше памяти. - Кортеж хешируем, может быть ключом в dict. - Синтаксис: [] vs (); кортеж из одного элемента: (1,)"
+    },
+    {
+      "id": "python-004",
+      "category": "python",
+      "question": "Что такое декоратор?",
+      "answer": "Функция, которая принимает другую функцию и возвращает «обёртку» с дополнительным поведением. Пример: логирование, кэширование, проверка прав. Синтаксис @decorator."
+    },
+    {
+      "id": "python-005",
+      "category": "python",
+      "question": "Какое значение у переменной без значения в Python?",
+      "answer": "None"
+    },
+    {
+      "id": "debug-001",
+      "category": "debug",
+      "question": "Веб-сервер отдаёт 502 Bad Gateway. Как найти причину?",
+      "answer": "502 = вышестоящий сервер вернул некорректный ответ. Проверить: - конфиги nginx (proxy_pass, логи) - логи upstream-приложения (Apache, PHP-FPM и т.д."
+    },
+    {
+      "id": "debug-002",
+      "category": "debug",
+      "question": "Файл с нечитаемым содержимым — как узнать формат и назначение?",
+      "answer": "file <путь> file -i -b <путь> — MIME-тип."
+    },
+    {
+      "id": "debug-003",
+      "category": "debug",
+      "question": "Запуск исполняемого файла даёт «no such file or directory». Почему?",
+      "answer": "Возможные причины: - 32-битный бинарник без нужных библиотек - Файл — битая символическая ссылка - Отсутствует интерпретатор (для скриптов) - Несовпадение архитектуры (arm vs amd64)"
+    },
+    {
+      "id": "debug-004",
+      "category": "debug",
+      "question": "Программа не находит конфиг. Как узнать, где ищет?",
+      "answer": "strace -f <команда> 2>&1 | grep open — видно какие файлы открываются. Либо verbose-режим: -vvv, --verbose --help."
+    },
+    {
+      "id": "debug-005",
+      "category": "debug",
+      "question": "У chmod отняли права на исполнение (chmod -x chmod). Что делать?",
+      "answer": "Варианты: 1. setfacl -m u::rwx,g::rx,o::x /usr/bin/chmod 2. Запуск через динамический компоновщик: /usr/lib64/ld-linux-x86-64.so.2 /usr/bin/chmod +x /usr/bin/chmod 3."
+    },
+    {
+      "id": "debug-006",
+      "category": "debug",
+      "question": "База упирается в диск, сервер менять нельзя. Как ускорить?",
+      "answer": "Рискованно: отключить fsync — данные будут писаться асинхронно в буфер, при сбое возможна потеря. Только как временная мера в нереплицируемой среде."
+    },
+    {
+      "id": "debug-007",
+      "category": "debug",
+      "question": "df показывает 20 ГБ занято, du — 20 МБ. Почему?",
+      "answer": "Удалённый файл, но процесс его всё ещё держит открытым. Место освободится только после завершения процесса. Найти: lsof -a +L1 | grep <путь> или lsof | grep deleted"
+    },
+    {
+      "id": "debug-008",
+      "category": "debug",
+      "question": "no space left on device, df — место есть, root пишет. Почему?",
+      "answer": "Квоты пользователя. quota -v <user>, проверить /etc/fstab (usrquota, grpquota), repquota."
+    },
+    {
+      "id": "debug-009",
+      "category": "debug",
+      "question": "Почему available (2919) больше, чем free (843)?",
+      "answer": "free — полностью свободная память. available — сколько можно использовать под новые приложения, с учётом рекуперируемого cache и buffers. Кэш можно освободить, если понадобится."
+    },
+    {
+      "id": "debug-010",
+      "category": "debug",
+      "question": "Сервер тормозит (Cassandra, ELK). Сняли нагрузку — всё ещё медленно. Как искать причину?",
+      "answer": "1. top — высокий sys time, systemd жрёт CPU 2. strace -c -p 1 — смотреть, какие syscall'ы 3. watch -n 1 ps --ppid 1 — кто постоянно форкается 4. Искать подозрительные процессы (a.out, a.sh и т.п."
+    },
+    {
+      "id": "debug-011",
+      "category": "debug",
+      "question": "Бинарник падает сразу, файловые дескрипторы пустые. Как искать причину?",
+      "answer": "strace ./binary 2>out.txt — смотреть syscalls, например open() на несуществующий файл, segfault после."
+    },
+    {
+      "id": "hardware-001",
+      "category": "hardware",
+      "question": "Сервер не отвечает, как получить доступ к нему, не находясь в ЦОДе?",
+      "answer": "Через IPMI или KVM over IP, если они есть на сервере. Иначе — звонить дежурному инженеру ЦОДа."
+    },
+    {
+      "id": "hardware-002",
+      "category": "hardware",
+      "question": "Что такое KVM (не гипервизор)? Как его использовать?",
+      "answer": "KVM over IP — устройство для передачи видеосигнала и ввода с мыши/клавиатуры по сети. Позволяет перезагрузить сервер, зайти в BIOS. Работает независимо от ОС. Аббревиатура: Keyboard, Video, Mouse."
+    },
+    {
+      "id": "hardware-003",
+      "category": "hardware",
+      "question": "Что такое IPMI? Какие подсистемы включает?",
+      "answer": "IPMI (Intelligent Platform Management Interface) — интерфейс удалённого мониторинга и управления сервером. Модуль BMC (Board Management Controller) — отдельный контроллер на плате."
+    },
+    {
+      "id": "hardware-004",
+      "category": "hardware",
+      "question": "Какие преимущества IPMI по сравнению с KVM?",
+      "answer": "IP-KVM: только консоль, нужен запрос в техподдержку, нет управления питанием и образами. IPMI даёт постоянный удалённый доступ, управление питанием, монтирование образов, мониторинг датчиков."
+    },
+    {
+      "id": "hardware-005",
+      "category": "hardware",
+      "question": "Как узнать модель процессора, число ядер, инструкции, режим работы?",
+      "answer": "- Модель: cat /proc/cpuinfo, lscpu - Физические/логические ядра: grep \"cpu cores\" /proc/cpuinfo, grep -c processor - Режим работы (governor): cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor."
+    },
+    {
+      "id": "hardware-006",
+      "category": "hardware",
+      "question": "Как посмотреть типы памяти, модель материнки, версию BIOS?",
+      "answer": "dmidecode --type memory, dmidecode --type baseboard, dmidecode --type BIOS"
+    },
+    {
+      "id": "hardware-007",
+      "category": "hardware",
+      "question": "Как посмотреть датчики напряжения, температуры, обороты вентиляторов?",
+      "answer": "sensors (lm-sensors). Для серверов — ipmicfg -pminfo или аналогичные IPMI-утилиты."
+    },
+    {
+      "id": "hardware-008",
+      "category": "hardware",
+      "question": "Как узнать тип сетевого адаптера и состояние интерфейсов?",
+      "answer": "lspci | grep net, lshw -class network -short, ip a, ip link show"
+    },
+    {
+      "id": "hardware-009",
+      "category": "hardware",
+      "question": "Как посмотреть USB и PCI устройства?",
+      "answer": "lspci, lsusb (опционально -vvv для деталей)"
+    }
+  ]
+}

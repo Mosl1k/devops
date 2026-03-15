@@ -1,0 +1,28 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: devops-quiz-redis
+    networks:
+      - default
+    restart: unless-stopped
+
+  alice-devops:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: alice-devops
+    environment:
+      - REDIS_URL=redis://devops-quiz-redis:6379/0
+      - PORT=2113
+      - QUESTIONS_PATH=/app/data/questions.json
+    volumes:
+      - ../data:/app/data:ro
+    depends_on:
+      - redis
+    networks:
+      - default
+    restart: unless-stopped
+
+networks:
+  default:
+    name: devops_network

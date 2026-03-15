@@ -1,0 +1,7 @@
+{
+  "systemd": ["system d", "системд"],
+  "init": ["инит", "init system"],
+  "контейнер": ["container", "docker-контейнер"],
+  "docker": ["докер"],
+  "kubernetes": ["кубернетес", "k8s"]
+}
