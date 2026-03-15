@@ -74,7 +74,8 @@
       "id": "linux-012",
       "category": "linux",
       "question": "Что показывает статус процессов? Какие статусы есть в Linux?",
-      "answer": "R — running, S — sleeping, D — uninterruptible sleep, Z — zombie, T — stopped. См. ps или top."
+      "answer": "R — running, S — sleeping, D — uninterruptible sleep, Z — zombie, T — stopped. См. ps или top.",
+      "follow_up_ids": ["linux-010"]
     },
     {
       "id": "linux-013",
@@ -339,7 +340,8 @@
       "id": "networks-001",
       "category": "networks",
       "question": "Что такое IP и маска подсети?",
-      "answer": "IP — числовой идентификатор узла в сети TCP/IP. Маска определяет, какая часть — сеть, какая — хост. Нужна для маршрутизации."
+      "answer": "IP — числовой идентификатор узла в сети TCP/IP. Маска определяет, какая часть — сеть, какая — хост. Нужна для маршрутизации.",
+      "follow_up_ids": ["networks-004"]
     },
     {
       "id": "networks-002",
@@ -369,7 +371,8 @@
       "id": "networks-006",
       "category": "networks",
       "question": "На каком уровне OSI работает TCP?",
-      "answer": "Транспортный (L4)."
+      "answer": "Транспортный (L4).",
+      "follow_up_ids": ["networks-025"]
     },
     {
       "id": "networks-007",
@@ -478,6 +481,22 @@
       "category": "networks",
       "question": "На каком уровне OSI работает SSH?",
       "answer": "Прикладной (L7). Транспорт — TCP."
+    },
+    {
+      "id": "networks-025",
+      "category": "networks",
+      "question": "Сколько уровней в модели OSI? Назови их.",
+      "answer": "7. Прикладной, представления, сеансовый, транспортный, сетевой, канальный, физический.",
+      "follow_up_ids": ["networks-004"],
+      "answer_alternatives": ["7", "семь"]
+    },
+    {
+      "id": "networks-026",
+      "category": "networks",
+      "question": "Как посмотреть IP-адрес в Linux?",
+      "answer": "ip a, ip addr, ifconfig, hostname -I",
+      "follow_up_ids": ["networks-004"],
+      "answer_alternatives": ["ip a", "ip addr", "ifconfig", "ip"]
     },
     {
       "id": "git-001",

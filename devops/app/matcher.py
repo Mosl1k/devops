@@ -56,13 +56,18 @@ def check_match(user_answer: str, correct_answer: str, alternatives: list[str] |
                 return True
 
     # 3. contains (user in correct or correct in user)
-    if correct_n in user_n or user_n in correct_n:
+    # Короткие ответы (1–2 символа) типа "l", "ip" не считать совпадением — слишком много ложных срабатываний
+    MIN_LEN_FOR_CONTAINS = 3
+    if correct_n in user_n:
+        return True
+    if len(user_n) >= MIN_LEN_FOR_CONTAINS and user_n in correct_n:
         return True
 
-    # 4. synonym-expanded contains
-    user_tokens = expand_with_synonyms(user_answer, synonyms)
+    # 4. synonym-expanded contains (совпадения длиной < 3 — отсеиваем, иначе "ip"/"l" дают ложные срабатывания)
+    user_tokens = {t for t in expand_with_synonyms(user_answer, synonyms) if len(t) >= 2}
     correct_tokens = expand_with_synonyms(correct_answer, synonyms)
-    if user_tokens & correct_tokens:
+    overlap = user_tokens & correct_tokens
+    if any(len(t) >= 3 for t in overlap):
         return True
 
     # 5. keyword match (with synonym expansion)

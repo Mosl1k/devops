@@ -49,10 +49,35 @@ def get_questions_by_category(questions: list[dict], category: str | None) -> li
     return [q for q in questions if q.get("category") == category]
 
 
+RELATED_CATEGORIES = {
+    "linux": ["Сети", "Docker"],
+    "networks": ["Linux", "Docker"],
+    "docker": ["Linux", "Kubernetes"],
+    "kubernetes": ["Docker", "Linux"],
+    "debug": ["Linux", "Базы данных"],
+    "hardware": ["Linux"],
+}
+
 def pick_random_question(questions: list[dict], exclude_ids: set[str] | None = None) -> dict | None:
     exclude_ids = exclude_ids or set()
     pool = [q for q in questions if q.get("id") not in exclude_ids]
     return random.choice(pool) if pool else None
+
+
+def pick_next_question(
+    questions: list[dict],
+    category: str | None,
+    current_q: dict | None,
+    answered_ids: set[str],
+) -> dict | None:
+    """Следующий вопрос: предпочитать follow_up, исключать уже отвеченные."""
+    pool = get_questions_by_category(questions, category)
+    pool_ids = {q["id"] for q in pool}
+    if current_q and current_q.get("follow_up_ids"):
+        for fid in current_q["follow_up_ids"]:
+            if fid not in answered_ids and fid in pool_ids:
+                return next((q for q in questions if q["id"] == fid), None)
+    return pick_random_question(pool, answered_ids)
 
 
 def detect_intent(text: str, phase: str) -> str:
@@ -114,14 +139,14 @@ def handle(
     # next / change_topic / repeat
     if intent == "next":
         session["phase"] = "quiz"
-        q = pick_random_question(
-            get_questions_by_category(questions, category),
-            exclude_ids={current} if current else set(),
-        )
+        answered = set(session.get("answered_ids", []))
+        pool = get_questions_by_category(questions, category)
+        exclude = answered | ({current} if current else set())
+        q = pick_random_question(pool, exclude_ids=exclude)
         if q:
             session["current_question"] = q["id"]
             return f"Вопрос: {q['question']}", session
-        return "Вопросы в этой теме закончились. Скажи «другая тема» чтобы сменить.", session
+        return _suggest_other_topic(category), session
 
     if intent == "repeat" and current:
         q = next((x for x in questions if x["id"] == current), None)
@@ -133,6 +158,7 @@ def handle(
         session["phase"] = "choosing_topic"
         session["category"] = None
         session["current_question"] = None
+        session["answered_ids"] = []
         cats = ", ".join(CATEGORIES.values())
         return f"Выбери тему: {cats}. Или скажи «все темы».", session
 
@@ -146,6 +172,7 @@ def handle(
             return "Не понял тему. Назови: Linux, Docker, Сети и т.д.", session
         session["phase"] = "quiz"
         session["category"] = topic
+        session["answered_ids"] = []
         pool = get_questions_by_category(questions, topic)
         if not pool:
             return "В этой теме пока нет вопросов. Выбери другую.", session
@@ -159,19 +186,30 @@ def handle(
         if not q:
             return "Ошибка. Скажи «следующий».", session
         ok = check_match(text, q["answer"], q.get("answer_alternatives"), synonyms)
+        answered = set(session.get("answered_ids", []))
+        answered.add(q["id"])
+        session["answered_ids"] = list(answered)
         session["current_question"] = None
-        nq = pick_random_question(get_questions_by_category(questions, category), exclude_ids={q["id"]})
+        nq = pick_next_question(questions, category, q, answered)
         if ok:
             if nq:
                 session["current_question"] = nq["id"]
                 return f"Правильно! Следующий вопрос: {nq['question']}", session
-            return "Правильно! Вопросы закончились. Скажи «другая тема» для смены.", session
+            return _suggest_other_topic(category), session
         if nq:
             session["current_question"] = nq["id"]
             return f"Нет. Правильно: {q['answer']}. Следующий вопрос: {nq['question']}", session
-        return f"Нет. Правильно: {q['answer']}. Вопросы закончились. Скажи «другая тема».", session
+        return f"Нет. Правильно: {q['answer']}. {_suggest_other_topic(category)}", session
 
     return "Скажи «следующий» или «другая тема».", session
+
+
+def _suggest_other_topic(category: str | None) -> str:
+    """Предложить другую тему вместо повторения."""
+    if category and category in RELATED_CATEGORIES:
+        topics = ", ".join(RELATED_CATEGORIES[category][:2])
+        return f"Вопросы закончились. Можем перейти к {topics}. Назови тему."
+    return "Вопросы закончились. Скажи «другая тема» или название темы."
 
 
 def _handle_add_question(text: str, session: dict, intent: str, add_buffer: dict, questions: list[dict]) -> tuple[str, dict]:
