@@ -3,5 +3,7 @@
   "init": ["инит", "init system"],
   "контейнер": ["container", "docker-контейнер"],
   "docker": ["докер"],
-  "kubernetes": ["кубернетес", "k8s"]
+  "kubernetes": ["кубернетес", "k8s"],
+  "mount": ["маунт", "монт"],
+  "linux": ["линукс"]
 }

@@ -62,16 +62,24 @@ def check_match(user_answer: str, correct_answer: str, alternatives: list[str] |
     # 4. synonym-expanded contains
     user_tokens = expand_with_synonyms(user_answer, synonyms)
     correct_tokens = expand_with_synonyms(correct_answer, synonyms)
-    if user_tokens & correct_tokens and len(user_tokens & correct_tokens) >= 1:
-        # ключевое слово есть
-        pass
+    if user_tokens & correct_tokens:
+        return True
 
-    # 5. keyword match
+    # 5. keyword match (with synonym expansion)
     correct_keys = get_keywords(correct_answer)
     if not correct_keys:
         return False
+    correct_expanded = set(correct_keys)
+    for k in correct_keys:
+        correct_expanded.update(synonyms.get(k, []))
     user_keys = get_keywords(user_answer)
-    overlap = len(correct_keys & user_keys) / len(correct_keys)
+    user_expanded = set(user_keys)
+    for k in user_keys:
+        for kw, alts in synonyms.items():
+            if k in alts or k == kw:
+                user_expanded.add(kw)
+                user_expanded.update(alts)
+    overlap = len(correct_expanded & user_expanded) / len(correct_keys)
     if overlap >= KEYWORD_THRESHOLD:
         return True
 

@@ -216,7 +216,8 @@
       "id": "linux-036",
       "category": "linux",
       "question": "Где информация о смонтированных ФС?",
-      "answer": "/proc/mounts, mount, findmnt, /etc/mtab"
+      "answer": "/proc/mounts, mount, findmnt, /etc/mtab",
+      "answer_alternatives": ["маунт", "монт", "/proc/mounts", "mount", "findmnt", "/etc/mtab"]
     },
     {
       "id": "linux-037",

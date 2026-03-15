@@ -71,39 +71,53 @@ def save_session(session_id: str, state: dict):
         _session_store[session_id] = state
 
 
-@app.route("/", methods=["POST"])
-def webhook():
-    data = request.json
-    if not data:
-        return jsonify({"error": "Invalid JSON"}), 400
-
-    session_id = data.get("session", {}).get("session_id", "unknown")
-    session = data.get("session", {})
-    command = data.get("request", {}).get("command", "").strip()
-
-    state = get_session(session_id)
-    text, new_state = handle(
-        command,
-        state,
-        get_questions(),
-        get_synonyms(),
-    )
-    save_session(session_id, new_state)
-
-    response = {
+def _build_response(session: dict, text: str) -> dict:
+    user_id = session.get("user_id") or (session.get("user") or {}).get("user_id")
+    return {
         "version": "1.0",
         "session": {
             "message_id": session.get("message_id"),
             "session_id": session.get("session_id"),
             "skill_id": session.get("skill_id"),
-            "user_id": session.get("user_id"),
+            "user_id": user_id,
         },
         "response": {
             "text": text,
             "end_session": False,
         },
     }
-    return jsonify(response)
+
+
+@app.route("/", methods=["POST"])
+def webhook():
+    try:
+        data = request.get_json(silent=True)
+    except Exception:
+        data = None
+    if not data:
+        return jsonify({"error": "Invalid JSON"}), 400
+
+    session_data = data.get("session", {})
+    session_id = session_data.get("session_id", "unknown")
+    req = data.get("request", {}) or {}
+    command = (req.get("command") or req.get("original_utterance") or "").strip()
+
+    try:
+        state = get_session(session_id)
+        text, new_state = handle(
+            command,
+            state,
+            get_questions(),
+            get_synonyms(),
+        )
+        save_session(session_id, new_state)
+        response = _build_response(session_data, text)
+    except Exception as e:
+        response = _build_response(
+            session_data,
+            "Произошла ошибка. Попробуйте ещё раз.",
+        )
+    return jsonify(response), 200
 
 
 if __name__ in ("__main__", "app.main"):

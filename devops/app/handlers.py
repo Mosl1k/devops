@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .matcher import check_match
 
+TOPIC_ALIASES = {"линукс": "linux", "докер": "docker", "сети": "networks", "гит": "git", "кубер": "kubernetes"}
 CATEGORIES = {
     "linux": "Linux",
     "docker": "Docker",
@@ -84,6 +85,9 @@ def resolve_topic(t: str) -> str | None:
     t = t.lower().strip()
     if "все" in t or "микс" in t:
         return "all"
+    for alias, cat_key in TOPIC_ALIASES.items():
+        if alias in t:
+            return cat_key
     for cat_key, cat_name in CATEGORIES.items():
         if cat_key in t or cat_name.lower() in t:
             return cat_key
@@ -155,14 +159,17 @@ def handle(
         if not q:
             return "Ошибка. Скажи «следующий».", session
         ok = check_match(text, q["answer"], q.get("answer_alternatives"), synonyms)
+        session["current_question"] = None
+        nq = pick_random_question(get_questions_by_category(questions, category), exclude_ids={q["id"]})
         if ok:
-            session["current_question"] = None
-            nq = pick_random_question(get_questions_by_category(questions, category))
             if nq:
                 session["current_question"] = nq["id"]
                 return f"Правильно! Следующий вопрос: {nq['question']}", session
             return "Правильно! Вопросы закончились. Скажи «другая тема» для смены.", session
-        return f"Нет. Правильный ответ: {q['answer']}. Скажи «следующий» для нового вопроса.", session
+        if nq:
+            session["current_question"] = nq["id"]
+            return f"Нет. Правильно: {q['answer']}. Следующий вопрос: {nq['question']}", session
+        return f"Нет. Правильно: {q['answer']}. Вопросы закончились. Скажи «другая тема».", session
 
     return "Скажи «следующий» или «другая тема».", session
 
