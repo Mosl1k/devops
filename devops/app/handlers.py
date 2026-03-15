@@ -145,13 +145,17 @@ def handle(
         q = pick_random_question(pool, exclude_ids=exclude)
         if q:
             session["current_question"] = q["id"]
-            return f"Вопрос: {_tts(q['question'], q, 'question')}", session
+            return _question_line(q, category, "Вопрос"), session
         return _suggest_other_topic(category), session
 
     if intent == "repeat" and current:
         q = next((x for x in questions if x["id"] == current), None)
         if q:
-            return f"Повторяю: {_tts(q['question'], q, 'question')}", session
+            qt = _tts(q["question"], q, "question")
+            if category == "all" and q.get("category"):
+                cat_name = CATEGORIES.get(q["category"], q["category"])
+                return f"Повторяю. Из темы {cat_name}: {qt}", session
+            return f"Повторяю: {qt}", session
         return "Не могу повторить. Скажи «следующий» для нового вопроса.", session
 
     if intent == "change_topic":
@@ -178,7 +182,7 @@ def handle(
             return "В этой теме пока нет вопросов. Выбери другую.", session
         q = pick_random_question(pool)
         session["current_question"] = q["id"]
-        return f"Тема выбрана. Вопрос: {_tts(q['question'], q, 'question')}", session
+        return f"Тема выбрана. " + _question_line(q, topic, "Вопрос"), session
 
     # answer
     if phase == "quiz" and current:
@@ -194,12 +198,12 @@ def handle(
         if ok:
             if nq:
                 session["current_question"] = nq["id"]
-                return f"Правильно! Следующий вопрос: {_tts(nq['question'], nq, 'question')}", session
+                return f"Правильно! " + _question_line(nq, category, "Следующий вопрос"), session
             return _suggest_other_topic(category), session
         if nq:
             session["current_question"] = nq["id"]
             ans = _tts(q["answer"], q, "answer")
-            return f"Нет. Правильно: {ans}. Следующий вопрос: {_tts(nq['question'], nq, 'question')}", session
+            return f"Нет. Правильно: {ans}. " + _question_line(nq, category, "Следующий вопрос"), session
         ans = _tts(q["answer"], q, "answer")
         return f"Нет. Правильно: {ans}. {_suggest_other_topic(category)}", session
 
@@ -209,6 +213,15 @@ def handle(
 def _tts(text: str, q: dict, key: str) -> str:
     """Текст для озвучки: приоритет *_tts (без слэшей/букв), иначе как есть."""
     return q.get(f"{key}_tts", text)
+
+
+def _question_line(q: dict, category: str | None, prefix: str = "Вопрос") -> str:
+    """Формирует строку с вопросом. При «все темы» добавляет название темы."""
+    qt = _tts(q["question"], q, "question")
+    if category == "all" and q.get("category"):
+        cat_name = CATEGORIES.get(q["category"], q["category"])
+        return f"{prefix} из темы {cat_name}: {qt}"
+    return f"{prefix}: {qt}"
 
 
 def _suggest_other_topic(category: str | None) -> str:
