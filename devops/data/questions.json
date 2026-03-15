@@ -6,13 +6,15 @@
       "id": "linux-001",
       "category": "linux",
       "question": "Что такое POSIX?",
-      "answer": "Стандарт интерфейса для Unix-подобных ОС. Определяет API для работы с процессами, файлами, сокетами. Облегчает переносимость программ между Linux, macOS, BSD."
+      "answer": "Стандарт интерфейса для Unix-подобных ОС. Определяет API для работы с процессами, файлами, сокетами. Облегчает переносимость программ между Linux, macOS, BSD.",
+      "answer_alternatives": ["posix", "стандарт", "unix"]
     },
     {
       "id": "linux-002",
       "category": "linux",
       "question": "Что такое уровни выполнения (runlevels)?",
-      "answer": "Уровень 0 — выключение; 1 — single-user; 2 — multi-user без NFS; 3 — multi-user с сетью; 5 — графический режим; 6 — перезагрузка. В systemd заменены на targets."
+      "answer": "Уровень 0 — выключение; 1 — single-user; 2 — multi-user без NFS; 3 — multi-user с сетью; 5 — графический режим; 6 — перезагрузка. В systemd заменены на targets.",
+      "answer_alternatives": ["runlevel", "runlevels", "target", "targets", "уровень"]
     },
     {
       "id": "linux-003",
