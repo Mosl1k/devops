@@ -145,13 +145,13 @@ def handle(
         q = pick_random_question(pool, exclude_ids=exclude)
         if q:
             session["current_question"] = q["id"]
-            return f"Вопрос: {q['question']}", session
+            return f"Вопрос: {_tts(q['question'], q, 'question')}", session
         return _suggest_other_topic(category), session
 
     if intent == "repeat" and current:
         q = next((x for x in questions if x["id"] == current), None)
         if q:
-            return f"Повторяю: {q['question']}", session
+            return f"Повторяю: {_tts(q['question'], q, 'question')}", session
         return "Не могу повторить. Скажи «следующий» для нового вопроса.", session
 
     if intent == "change_topic":
@@ -178,7 +178,7 @@ def handle(
             return "В этой теме пока нет вопросов. Выбери другую.", session
         q = pick_random_question(pool)
         session["current_question"] = q["id"]
-        return f"Тема выбрана. Вопрос: {q['question']}", session
+        return f"Тема выбрана. Вопрос: {_tts(q['question'], q, 'question')}", session
 
     # answer
     if phase == "quiz" and current:
@@ -194,14 +194,21 @@ def handle(
         if ok:
             if nq:
                 session["current_question"] = nq["id"]
-                return f"Правильно! Следующий вопрос: {nq['question']}", session
+                return f"Правильно! Следующий вопрос: {_tts(nq['question'], nq, 'question')}", session
             return _suggest_other_topic(category), session
         if nq:
             session["current_question"] = nq["id"]
-            return f"Нет. Правильно: {q['answer']}. Следующий вопрос: {nq['question']}", session
-        return f"Нет. Правильно: {q['answer']}. {_suggest_other_topic(category)}", session
+            ans = _tts(q["answer"], q, "answer")
+            return f"Нет. Правильно: {ans}. Следующий вопрос: {_tts(nq['question'], nq, 'question')}", session
+        ans = _tts(q["answer"], q, "answer")
+        return f"Нет. Правильно: {ans}. {_suggest_other_topic(category)}", session
 
     return "Скажи «следующий» или «другая тема».", session
+
+
+def _tts(text: str, q: dict, key: str) -> str:
+    """Текст для озвучки: приоритет *_tts (без слэшей/букв), иначе как есть."""
+    return q.get(f"{key}_tts", text)
 
 
 def _suggest_other_topic(category: str | None) -> str:

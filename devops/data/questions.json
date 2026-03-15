@@ -56,7 +56,9 @@
       "id": "linux-009",
       "category": "linux",
       "question": "Как понять, используется ли в системе systemd?",
-      "answer": "stat /sbin/init — должен быть симлинк на systemd. Или ls /run/systemd/, readlink /proc/1/exe."
+      "question_tts": "Как понять, используется ли в системе системд?",
+      "answer": "stat /sbin/init — должен быть симлинк на systemd. Или ls /run/systemd/, readlink /proc/1/exe.",
+      "answer_tts": "Команда stat от сбин инит — должен быть симлинк на системд. Или элэс в ран системд, ридлинк прок один эксэ."
     },
     {
       "id": "linux-010",
@@ -68,13 +70,15 @@
       "id": "linux-011",
       "category": "linux",
       "question": "Где в Linux хранится информация о процессах?",
-      "answer": "В виртуальной ФС /proc — подкаталоги по PID, файлы /proc/self, /proc/1/exe, и т.д."
+      "answer": "В виртуальной ФС /proc — подкаталоги по PID, файлы /proc/self, /proc/1/exe, и т.д.",
+      "answer_tts": "В виртуальной файловой системе прок — подкаталоги по пи-ай-ди, файлы прок self и прок один эксэ."
     },
     {
       "id": "linux-012",
       "category": "linux",
       "question": "Что показывает статус процессов? Какие статусы есть в Linux?",
       "answer": "R — running, S — sleeping, D — uninterruptible sleep, Z — zombie, T — stopped. См. ps или top.",
+      "answer_tts": "Р — раннинг, С — слипинг, Д — анноинтерептебл слип, З — зомби, Т — стоппед. Команды пэ-эс или топ.",
       "follow_up_ids": ["linux-010"]
     },
     {
@@ -141,7 +145,8 @@
       "id": "linux-023",
       "category": "linux",
       "question": "Где посмотреть потребление памяти?",
-      "answer": "free -h, cat /proc/meminfo, htop."
+      "answer": "free -h, cat /proc/meminfo, htop.",
+      "answer_tts": "Команды free и htop, или чтение файла meminfo в каталоге proc."
     },
     {
       "id": "linux-024",
@@ -213,13 +218,15 @@
       "id": "linux-035",
       "category": "linux",
       "question": "Как работает sudo? Для чего используется?",
-      "answer": "Запуск команды от другого пользователя (по умолчанию root). Читает /etc/sudoers. sudo -u user cmd."
+      "answer": "Запуск команды от другого пользователя (по умолчанию root). Читает /etc/sudoers. sudo -u user cmd.",
+      "answer_tts": "Запуск команды от другого пользователя. Читает файл sudoers в каталоге etc. Команда sudo минус u user."
     },
     {
       "id": "linux-036",
       "category": "linux",
       "question": "Где информация о смонтированных ФС?",
       "answer": "/proc/mounts, mount, findmnt, /etc/mtab",
+      "answer_tts": "Файл mounтс в каталоге прок, команда mount, findmnt, файл mtab в каталоге etc.",
       "answer_alternatives": ["маунт", "монт", "/proc/mounts", "mount", "findmnt", "/etc/mtab"]
     },
     {
@@ -322,6 +329,7 @@
       "id": "docker-014",
       "category": "docker",
       "question": "В /var/lib/docker/ — как понять, какая папка к какому контейнеру?",
+      "question_tts": "В каталоге вар lib docker — как понять, какая папка к какому контейнеру?",
       "answer": "docker inspect + GraphDriver.Data.MergedDir или docker inspect $(docker ps -qa) | jq -r '...'"
     },
     {
@@ -353,6 +361,7 @@
       "id": "networks-003",
       "category": "networks",
       "question": "Что такое 10.0.0.0/8, 192.168.0.0/16, 172.16.0.0/12?",
+      "question_tts": "Что такое приватные подсети десять с маской 8, 192.168 с маской 16, 172.16 с маской 12?",
       "answer": "Приватные подсети (RFC 1918). Не маршрутизируются в интернете. Используются в локальных сетях."
     },
     {
@@ -372,6 +381,7 @@
       "category": "networks",
       "question": "На каком уровне OSI работает TCP?",
       "answer": "Транспортный (L4).",
+      "answer_tts": "Транспортный, уровень 4.",
       "follow_up_ids": ["networks-025"]
     },
     {
@@ -480,12 +490,15 @@
       "id": "networks-024",
       "category": "networks",
       "question": "На каком уровне OSI работает SSH?",
-      "answer": "Прикладной (L7). Транспорт — TCP."
+      "question_tts": "На каком уровне ОСИ работает ЭС-ЭС-Эйч?",
+      "answer": "Прикладной (L7). Транспорт — TCP.",
+      "answer_tts": "Прикладной, уровень 7. Транспорт — ти-си-пи."
     },
     {
       "id": "networks-025",
       "category": "networks",
       "question": "Сколько уровней в модели OSI? Назови их.",
+      "question_tts": "Сколько уровней в модели ОСИ? Назови их.",
       "answer": "7. Прикладной, представления, сеансовый, транспортный, сетевой, канальный, физический.",
       "follow_up_ids": ["networks-004"],
       "answer_alternatives": ["7", "семь"]
@@ -495,6 +508,7 @@
       "category": "networks",
       "question": "Как посмотреть IP-адрес в Linux?",
       "answer": "ip a, ip addr, ifconfig, hostname -I",
+      "answer_tts": "Команда ip addr, айпиконфиг, hostname с опцией I.",
       "follow_up_ids": ["networks-004"],
       "answer_alternatives": ["ip a", "ip addr", "ifconfig", "ip"]
     },
@@ -1024,7 +1038,8 @@
       "id": "debug-002",
       "category": "debug",
       "question": "Файл с нечитаемым содержимым — как узнать формат и назначение?",
-      "answer": "file <путь> file -i -b <путь> — MIME-тип."
+      "answer": "file <путь> file -i -b <путь> — MIME-тип.",
+      "answer_tts": "Команда file с путём к файлу — покажет тип. Для MIME-типа: file с опциями минус и и минус б."
     },
     {
       "id": "debug-003",
@@ -1084,13 +1099,15 @@
       "id": "hardware-001",
       "category": "hardware",
       "question": "Сервер не отвечает, как получить доступ к нему, не находясь в ЦОДе?",
-      "answer": "Через IPMI или KVM over IP, если они есть на сервере. Иначе — звонить дежурному инженеру ЦОДа."
+      "answer": "Через IPMI или KVM over IP, если они есть на сервере. Иначе — звонить дежурному инженеру ЦОДа.",
+      "answer_tts": "Через ай-пи-эм-ай или ка-вэ-эм овер ай-пи, если они есть на сервере. Иначе — звонить дежурному инженеру ЦОДа."
     },
     {
       "id": "hardware-002",
       "category": "hardware",
       "question": "Что такое KVM (не гипервизор)? Как его использовать?",
-      "answer": "KVM over IP — устройство для передачи видеосигнала и ввода с мыши/клавиатуры по сети. Позволяет перезагрузить сервер, зайти в BIOS. Работает независимо от ОС. Аббревиатура: Keyboard, Video, Mouse."
+      "answer": "KVM over IP — устройство для передачи видеосигнала и ввода с мыши/клавиатуры по сети. Позволяет перезагрузить сервер, зайти в BIOS. Работает независимо от ОС. Аббревиатура: Keyboard, Video, Mouse.",
+      "answer_tts": "Ка-вэ-эм овер ай-пи — устройство для передачи видеосигнала и ввода с мыши и клавиатуры по сети. Позволяет перезагрузить сервер, зайти в биос. Работает независимо от ОС. Keyboard, Video, Mouse."
     },
     {
       "id": "hardware-003",
@@ -1102,13 +1119,15 @@
       "id": "hardware-004",
       "category": "hardware",
       "question": "Какие преимущества IPMI по сравнению с KVM?",
-      "answer": "IP-KVM: только консоль, нужен запрос в техподдержку, нет управления питанием и образами. IPMI даёт постоянный удалённый доступ, управление питанием, монтирование образов, мониторинг датчиков."
+      "answer": "IP-KVM: только консоль, нужен запрос в техподдержку, нет управления питанием и образами. IPMI даёт постоянный удалённый доступ, управление питанием, монтирование образов, мониторинг датчиков.",
+      "answer_tts": "Ай-пи ка-вэ-эм: только консоль, нужен запрос в техподдержку. Ай-пи-эм-ай даёт постоянный удалённый доступ, управление питанием, монтирование образов и мониторинг датчиков."
     },
     {
       "id": "hardware-005",
       "category": "hardware",
       "question": "Как узнать модель процессора, число ядер, инструкции, режим работы?",
-      "answer": "- Модель: cat /proc/cpuinfo, lscpu - Физические/логические ядра: grep \"cpu cores\" /proc/cpuinfo, grep -c processor - Режим работы (governor): cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor."
+      "answer": "- Модель: cat /proc/cpuinfo, lscpu - Физические/логические ядра: grep \"cpu cores\" /proc/cpuinfo, grep -c processor - Режим работы (governor): cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor.",
+      "answer_tts": "Кат прок купинфо, эл-эс-купью. Греп cpu cores в прок купинфо. Для режима работы — кат в sys devices system cpu."
     },
     {
       "id": "hardware-006",
@@ -1126,13 +1145,15 @@
       "id": "hardware-008",
       "category": "hardware",
       "question": "Как узнать тип сетевого адаптера и состояние интерфейсов?",
-      "answer": "lspci | grep net, lshw -class network -short, ip a, ip link show"
+      "answer": "lspci | grep net, lshw -class network -short, ip a, ip link show",
+      "answer_tts": "Команды эл-эс-пи-си-ай, эл-эс-эйч-даблью, ip addr и ip link show."
     },
     {
       "id": "hardware-009",
       "category": "hardware",
       "question": "Как посмотреть USB и PCI устройства?",
-      "answer": "lspci, lsusb (опционально -vvv для деталей)"
+      "answer": "lspci, lsusb (опционально -vvv для деталей)",
+      "answer_tts": "Команды эл-эс-пи-си-ай и эл-эс-ю-эс-би, с тремя вэ для деталей."
     }
   ]
 }
